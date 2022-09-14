@@ -75,6 +75,7 @@ public class UserController {
 
     //atualização de um usuario
     //implementar dto atualização sem senha
+    //ok
     @PutMapping("{id}")
     @PreAuthorize("isAuthenticated()") //autenticado
     public ResponseEntity<User> update(@PathVariable Long id, @RequestBody @Valid UserDtoNoPassword newUser){

@@ -1,15 +1,15 @@
 
-# Listar
+# Listar task
 GET http://localhost:8080/api/task
 
 ###
 
-# Apagar
+# Apagar task
 DELETE http://localhost:8080/api/task/1
 
 ###
 
-# Cadastrar
+# Cadastrar task
 POST http://localhost:8080/api/task
 Content-Type: application/json
 Authorization: Basic joao@fiap.com.br 123
@@ -26,4 +26,43 @@ Authorization: Basic joao@fiap.com.br 123
     "score": 150,
     "status" : 0
 }
+###
+
+#Listar usuários
+GET http://localhost:8080/api/user
+
+###
+
+#Detalhes do usuário
+GET http://localhost:8080/api/user/1
+
+###
+
+#Apagar usuário
+DELETE http://localhost:8080/api/user/1
+Authorization: Basic Auth admin@fiap.com.br administrador
+
+###
+
+#Cadastrar Usuário
+POST http://localhost:8080/api/user
+Authorization: Basic Auth admin@fiap.com.br administrador
+
+{ 
+    "name": "João Carlos Lima",
+    "email": "joao@fiap.com.br",
+    "password" : "123"
+}
+
+###
+
+#Alterar usuário
+PUT http://localhost:8080/api/user
+Authorization: Basic Auth admin@fiap.com.br administrador
+
+{ 
+    "name": "Maria Pereira",
+    "email": "maria@fiap.com.br"
+}
+
 ###
