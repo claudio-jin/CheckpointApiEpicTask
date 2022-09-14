@@ -1,6 +1,5 @@
 package br.com.fiap.epictaskapi.controller;
 
-import javax.persistence.Cacheable;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -12,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,15 +47,16 @@ public class UserController {
         return service.listAll(paginacao);
     }
 
+    //Listagem de um usuario
     @GetMapping("{id}")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("permitAll()")    //qualquer um pode listar
     public ResponseEntity<User> show(@PathVariable Long id){
         return ResponseEntity.of(service.getById(id));
     }
 
-    
+    //atualização de um usuario
     @PutMapping("{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()") //autenticado
     @CacheEvict(value = "user", allEntries = true)
     public ResponseEntity<User> update(@PathVariable Long id, @RequestBody @Valid User newUser){
         var optional = service.getById(id);
@@ -71,6 +72,18 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    //Remove pelo id
+    @DeleteMapping("{id}")
+    @PreAuthorize("isAuthenticated()")
+    @CacheEvict(value = "task", allEntries = true)
+    public ResponseEntity<Object> destroy(@PathVariable Long id){
+        var optional = service.getById(id);
 
+        if(optional.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        service.remove(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }
