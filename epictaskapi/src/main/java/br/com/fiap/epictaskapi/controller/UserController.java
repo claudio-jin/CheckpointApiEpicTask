@@ -1,13 +1,11 @@
 package br.com.fiap.epictaskapi.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -39,7 +37,9 @@ public class UserController {
     PasswordEncoder passwordEncoder;
     
     //cadastro de usuarios
+    //ok
     @PostMapping
+    @PreAuthorize("permitAll()")
     public ResponseEntity<User> create(@RequestBody @Valid User user) {
         String newPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(newPassword);
@@ -50,15 +50,19 @@ public class UserController {
     }
 
     //listagem de usuarios
-    //ok
+    
     @GetMapping
     @PreAuthorize("permitAll()")
-    public Page<User> index(@PageableDefault(size = 5) Pageable paginacao){
-        return service.listAll(paginacao);
+    public Page<UserDtoNoPassword> index(@PageableDefault(size = 5) Pageable paginacao){
+        Page<User> user = service.listAll(paginacao);
+        Page<UserDtoNoPassword> dto = user.map( d -> new UserDtoNoPassword(d));
+
+        return dto;
     }
 
     //Listagem de um usuario
     //implementar dto sem senha
+    //ok
     @GetMapping("{id}")
     @PreAuthorize("permitAll()")    //qualquer um pode listar
     public ResponseEntity<List<UserDtoNoPassword>> show(@PathVariable Long id){
@@ -73,7 +77,6 @@ public class UserController {
     //implementar dto atualização sem senha
     @PutMapping("{id}")
     @PreAuthorize("isAuthenticated()") //autenticado
-    @CacheEvict(value = "user", allEntries = true)
     public ResponseEntity<User> update(@PathVariable Long id, @RequestBody @Valid User newUser){
         var optional = service.getById(id);
 
@@ -92,7 +95,6 @@ public class UserController {
     //ok
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()") //autenticado
-    @CacheEvict(value = "task", allEntries = true)
     public ResponseEntity<Object> destroy(@PathVariable Long id){
         var optional = service.getById(id);
 

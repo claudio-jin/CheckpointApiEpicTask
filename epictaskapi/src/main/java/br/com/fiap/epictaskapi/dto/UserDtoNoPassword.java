@@ -15,6 +15,7 @@ public class UserDtoNoPassword {
     public UserDtoNoPassword (User user) {
         this.id = user.getId();
         this.name = user.getName();
+        this.email = user.getEmail();
     }
 
 
