@@ -50,7 +50,7 @@ public class UserController {
     }
 
     //listagem de usuarios
-    
+    //ok
     @GetMapping
     @PreAuthorize("permitAll()")
     public Page<UserDtoNoPassword> index(@PageableDefault(size = 5) Pageable paginacao){
@@ -77,7 +77,7 @@ public class UserController {
     //implementar dto atualização sem senha
     @PutMapping("{id}")
     @PreAuthorize("isAuthenticated()") //autenticado
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody @Valid User newUser){
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody @Valid UserDtoNoPassword newUser){
         var optional = service.getById(id);
 
         if(optional.isEmpty())
