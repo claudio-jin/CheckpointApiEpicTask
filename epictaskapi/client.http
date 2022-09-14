@@ -19,4 +19,11 @@ Authorization: Basic joao@fiap.com.br 123
     "description": "Modelar as tabelas",
     "score": 150
 }
+
+{
+    "title": "testenovo",
+    "description": "Modelar as tabelas",
+    "score": 150,
+    "status" : 0
+}
 ###

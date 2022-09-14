@@ -24,6 +24,10 @@ public class SecurityConfiguration{
                 .antMatchers(HttpMethod.POST, "/api/task").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/task/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/task/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/user/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/user").permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/user/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/user/**").authenticated()
                 .anyRequest().denyAll()
             .and()
                 .csrf().disable();

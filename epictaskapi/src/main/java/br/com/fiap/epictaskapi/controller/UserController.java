@@ -11,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,10 +31,14 @@ public class UserController {
     @Autowired
     private UserService service;
     
-
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    
     //cadastro de usuarios
     @PostMapping
     public ResponseEntity<User> create(@RequestBody @Valid User user) {
+        String newPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(newPassword);
         service.save(user);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -41,6 +46,7 @@ public class UserController {
     }
 
     //listagem de usuarios
+    //ok
     @GetMapping
     @PreAuthorize("permitAll()")
     public Page<User> index(@PageableDefault(size = 5) Pageable paginacao){
@@ -48,6 +54,7 @@ public class UserController {
     }
 
     //Listagem de um usuario
+    //implementar dto sem senha
     @GetMapping("{id}")
     @PreAuthorize("permitAll()")    //qualquer um pode listar
     public ResponseEntity<User> show(@PathVariable Long id){
@@ -55,6 +62,7 @@ public class UserController {
     }
 
     //atualização de um usuario
+    //implementar dto atualização sem senha
     @PutMapping("{id}")
     @PreAuthorize("isAuthenticated()") //autenticado
     @CacheEvict(value = "user", allEntries = true)
@@ -73,8 +81,9 @@ public class UserController {
     }
 
     //Remove pelo id
+    //ok
     @DeleteMapping("{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()") //autenticado
     @CacheEvict(value = "task", allEntries = true)
     public ResponseEntity<Object> destroy(@PathVariable Long id){
         var optional = service.getById(id);
