@@ -1,5 +1,8 @@
 package br.com.fiap.epictaskapi.controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.fiap.epictaskapi.dto.UserDtoNoPassword;
 import br.com.fiap.epictaskapi.model.User;
 import br.com.fiap.epictaskapi.service.UserService;
 
@@ -57,8 +61,12 @@ public class UserController {
     //implementar dto sem senha
     @GetMapping("{id}")
     @PreAuthorize("permitAll()")    //qualquer um pode listar
-    public ResponseEntity<User> show(@PathVariable Long id){
-        return ResponseEntity.of(service.getById(id));
+    public ResponseEntity<List<UserDtoNoPassword>> show(@PathVariable Long id){
+        var lista = service.listDtoUser(id);
+        if(lista.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok().body(lista);
     }
 
     //atualização de um usuario
